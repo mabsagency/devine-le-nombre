@@ -651,6 +651,7 @@ def index():
         session["history"] = []
         if "best_score" not in session:
             session["best_score"] = None
+        session["game_won"] = False
 
     if request.method == "POST":
         try:
@@ -659,6 +660,8 @@ def index():
             # Validate input
             if guess < 1 or guess > 100:
                 message = "Erreur: Le nombre doit être entre 1 et 100"
+            elif session.get("game_won", False):
+                message = "Félicitations ! Cliquez sur 'Nouveau Jeu' pour recommencer."
             else:
                 session["tries"] += 1
 
@@ -679,14 +682,11 @@ def index():
                 else:
                     message = f"Bravo 🎉 Trouvé en {session['tries']} essais !"
                     guess_data["correct"] = True
+                    session["game_won"] = True
 
                     # Update best score
                     if session["best_score"] is None or session["tries"] < session["best_score"]:
                         session["best_score"] = session["tries"]
-
-                    # Reset for new game after success
-                    session.pop("number", None)
-                    session.pop("tries", None)
 
                 # Add to history (keep last 10 guesses)
                 session["history"].append(guess_data)
@@ -705,12 +705,13 @@ def index():
 def reset_game():
     """Reset the current game session"""
     try:
-        # Clear game-specific session data
-        session.pop("number", None)
-        session.pop("tries", None)
-        session.pop("history", None)
+        # Reset all game data for a new game
+        session["number"] = random.randint(1, 100)
+        session["tries"] = 0
+        session["history"] = []
+        session["game_won"] = False
         # Keep best_score
-        return jsonify({"success": True, "message": "Partie réinitialisée"})
+        return jsonify({"success": True, "message": "Nouvelle partie commencée"})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
