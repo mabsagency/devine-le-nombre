@@ -1,7 +1,6 @@
 from flask import Flask, render_template_string, request, session, jsonify, send_from_directory
 import random
 import os
-from vercel_wsgi import wsgi
 
 app = Flask(__name__)
 
@@ -735,7 +734,6 @@ def page_not_found(e):
 def internal_error(e):
     return render_template_string(ERROR_500_HTML), 500
 
-# Handler pour Vercel
-@wsgi
-def handler(environ, start_response):
-    return app(environ, start_response)
+# Pour le développement local
+if __name__ == "__main__":
+    app.run(debug=True)
