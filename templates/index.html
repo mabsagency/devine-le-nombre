@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Jeu de devinette de nombre - Devine le nombre entre 1 et 100">
+    <title>Devine le Nombre - Jeu Interactif</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <i class="fas fa-dice-six"></i>
+                <h1>Devine le Nombre</h1>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number" id="current-tries">{{ session.get('tries', 0) }}</span>
+                        <span class="stat-label">Essais</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="best-score">{{ session.get('best_score', '-') }}</span>
+                        <span class="stat-label">Record</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="subtitle">Choisis un nombre entre 1 et 100</p>
+
+            <form method="POST" class="guess-form" id="guess-form">
+                <div class="input-group">
+                    <input type="number" name="guess" id="guess" required min="1" max="100" placeholder="Entre 1 et 100" autocomplete="off">
+                    <button type="submit" class="btn-primary" id="submit-btn">
+                        <i class="fas fa-search"></i>
+                        <span class="btn-text">Tester</span>
+                    </button>
+                </div>
+                <button type="button" class="btn-secondary" id="reset-btn">
+                    <i class="fas fa-redo"></i>
+                    <span>Nouveau Jeu</span>
+                </button>
+            </form>
+
+            <div class="message" id="message">
+                {% if message %}
+                    <div class="message-content">{{ message }}</div>
+                {% else %}
+                    <div class="message-content welcome">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Prêt à jouer ?</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="game-history" id="game-history">
+                <h3>Derniers essais</h3>
+                <div class="history-list" id="history-list">
+                    {% if session.get('history') %}
+                        {% for guess in session.history %}
+                            <div class="history-item {{ 'correct' if guess.correct else ('high' if guess.high else 'low') }}">
+                                <span class="guess-number">{{ guess.number }}</span>
+                                <span class="guess-result">
+                                    {% if guess.correct %}
+                                        <i class="fas fa-check"></i> Correct
+                                    {% elif guess.high %}
+                                        <i class="fas fa-arrow-up"></i> Trop grand
+                                    {% else %}
+                                        <i class="fas fa-arrow-down"></i> Trop petit
+                                    {% endif %}
+                                </span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Fait avec <i class="fas fa-heart"></i> en Python Flask</p>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
