@@ -1,0 +1,26 @@
+{
+  "name": "devine-le-nombre",
+  "version": "1.0.0",
+  "description": "Jeu web interactif pour deviner un nombre entre 1 et 100",
+  "main": "api/index.py",
+  "scripts": {
+    "dev": "python app.py",
+    "start": "python app.py",
+    "build": "echo 'No build step required'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "flask",
+    "game",
+    "number-guessing",
+    "web-app",
+    "python"
+  ],
+  "author": "Votre Nom",
+  "license": "MIT",
+  "engines": {
+    "python": "3.9.x"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
